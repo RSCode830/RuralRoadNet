@@ -1,0 +1,23 @@
+name: tests
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  cpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -q
+      - run: python demo.py
+      - run: python train.py --config data/demo/config.json --train data/demo/train.json --val data/demo/val.json --output runs/demo --device cpu
+      - run: python evaluate.py --checkpoint runs/demo/best.pt --manifest data/demo/test.json --output runs/demo/test.json --device cpu
+      - run: python predict.py --checkpoint runs/demo/best.pt --image data/demo/test_0.png --prior data/demo/test_0_prior.npy --output predictions/demo --device cpu
