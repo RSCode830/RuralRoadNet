@@ -1,0 +1,33 @@
+{
+  "image_size": 512,
+  "prior_kind": "sam",
+  "seed": 42,
+  "batch_size": 16,
+  "epochs": 100,
+  "learning_rate": 0.0001,
+  "weight_decay": 0.01,
+  "gradient_clip": 5.0,
+  "threshold": 0.5,
+  "cpu_threads": 2,
+  "model": {
+    "widths": [24, 48, 96, 192],
+    "depths": [2, 2, 2],
+    "decoder_depth": 2,
+    "state_dim": 8,
+    "stripe_width": 8,
+    "directions": 4,
+    "backend": "parallel",
+    "gate_epsilon": 0.000001
+  },
+  "loss": {
+    "bce_weight": 1.0,
+    "dice_weight": 1.0,
+    "aux_weight": 0.25,
+    "topology_weight": 0.1,
+    "skeleton_iterations": 10
+  },
+  "sam": {
+    "points_per_side": 32,
+    "scoring": {"top_k": 16, "alpha": 1.0, "beta": 1.0, "sharpness": 1.0}
+  }
+}
